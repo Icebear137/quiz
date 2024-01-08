@@ -9,6 +9,7 @@ const userSlice = createSlice({
       username: "",
       image: "",
       role: "",
+      email: "",
     },
     isAuthenticated: false,
   },
@@ -20,12 +21,24 @@ const userSlice = createSlice({
         username: action.payload.username,
         image: action.payload.image,
         role: action.payload.role,
+        email: action.payload.email,
       };
       state.isAuthenticated = true;
+    },
+    logOut: (state) => {
+      state.account = {
+        access_token: "",
+        refresh_token: "",
+        username: "",
+        image: "",
+        role: "",
+        email: "",
+      };
+      state.isAuthenticated = false;
     },
   },
 });
 
-export const { loginSuccess } = userSlice.actions;
+export const { loginSuccess, logOut } = userSlice.actions;
 
 export default userSlice.reducer;
