@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import axios from "axios";
 import { toast } from "react-toastify";
 import { useDispatch, useSelector } from "react-redux";
 import { loginSuccess } from "../../redux/userSlice";
+import { getLogin } from "../../api/apiServices";
 
 const Login = () => {
   const isAuthenticated = useSelector((state) => state.user.isAuthenticated);
@@ -16,7 +16,7 @@ const Login = () => {
     if (isAuthenticated) {
       navigate("/");
     }
-  }, [isAuthenticated]);
+  }, [isAuthenticated, navigate]);
 
   const validateEmail = (email) => {
     return String(email)
@@ -37,18 +37,15 @@ const Login = () => {
       return;
     }
 
-    let data = await axios.post("http://localhost:8081/api/v1/login", {
-      email,
-      password,
-    });
+    let data = await getLogin(email, password);
     console.log(data);
-    if (data && data.data && +data.data.EC === 0) {
-      dispatch(loginSuccess(data.data.DT));
+    if (+data.EC === 0) {
+      dispatch(loginSuccess(data.DT));
       toast.success("Login successfully");
       navigate("/");
     }
-    if (data && data.data && +data.data.EC !== 0) {
-      toast.error(data.data.EM);
+    if (data.EC !== 0) {
+      toast.error(data.EM);
     }
   };
   return (

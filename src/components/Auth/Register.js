@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import axios from "axios";
 import { toast } from "react-toastify";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
+import { getRegister } from "../../api/apiServices";
 
 const Register = () => {
   const [email, setEmail] = useState("");
@@ -15,7 +15,7 @@ const Register = () => {
     if (isAuthenticated) {
       navigate("/");
     }
-  }, [isAuthenticated]);
+  }, [isAuthenticated, navigate]);
 
   const validateEmail = (email) => {
     return String(email)
@@ -36,18 +36,14 @@ const Register = () => {
       return;
     }
 
-    let data = await axios.post("http://localhost:8081/api/v1/register", {
-      email,
-      password,
-      username,
-    });
+    let data = await getRegister(username, email, password);
     console.log(data);
-    if (data && data.data && +data.data.EC === 0) {
+    if (+data.EC === 0) {
       toast.success("Register successfully");
       navigate("/login");
     }
-    if (data && data.data && +data.data.EC !== 0) {
-      toast.error(data.data.EM);
+    if (data.EC !== 0) {
+      toast.error(data.EM);
     }
   };
 
