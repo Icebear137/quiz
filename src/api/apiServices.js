@@ -20,4 +20,25 @@ const postSubmitQuiz = (data) => {
   return instance.post("api/v1/quiz-submit", { ...data });
 };
 
-export { getQuizbyUser, getLogin, getRegister, getDataQuiz, postSubmitQuiz };
+const postCreateNewQuiz = (description, name, difficulty, quizImage) => {
+  const formData = new FormData();
+  formData.append("description", description);
+  formData.append("name", name);
+  formData.append("difficulty", difficulty);
+  formData.append("quizImage", quizImage);
+  return instance.post("api/v1/quiz", formData);
+};
+
+const getAllQuizForAdmin = () => {
+  return instance.get("api/v1/quiz/all");
+};
+
+export {
+  getQuizbyUser,
+  getLogin,
+  getRegister,
+  getDataQuiz,
+  postSubmitQuiz,
+  postCreateNewQuiz,
+  getAllQuizForAdmin,
+};
