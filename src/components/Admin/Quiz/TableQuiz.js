@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import { Table } from "react-bootstrap";
 import { getAllQuizForAdmin } from "../../../api/apiServices";
+import ModalUpdateQuiz from "./ModalUpdateQuiz";
+import ModalDeleteQuiz from "./ModalDeleteQuiz";
 
 const TableQuiz = ({ quiz }) => {
   const [listQuiz, setListQuiz] = useState([]);
@@ -41,8 +43,8 @@ const TableQuiz = ({ quiz }) => {
               <td>{item.description}</td>
               <td>{item.difficulty}</td>
               <td className="flex gap-[15px]">
-                <button className="btn btn-primary">Edit</button>
-                <button className="btn btn-danger">Delete</button>
+                <ModalUpdateQuiz user={item} getAllQuiz={getAllQuiz} />
+                <ModalDeleteQuiz user={item} getAllQuiz={getAllQuiz} />
               </td>
             </tr>
           ))}

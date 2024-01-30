@@ -6,6 +6,7 @@ import reportWebVitals from "./reportWebVitals";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { BrowserRouter } from "react-router-dom";
 import "react-toastify/dist/ReactToastify.css";
+import "react-perfect-scrollbar/dist/css/styles.css";
 import Layout from "./Layout";
 import { Provider } from "react-redux";
 import { store, persistor } from "./redux/store";

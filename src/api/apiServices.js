@@ -33,6 +33,26 @@ const getAllQuizForAdmin = () => {
   return instance.get("api/v1/quiz/all");
 };
 
+const putUpdateQuizForAdmin = (
+  id,
+  name,
+  description,
+  difficulty,
+  quizImage
+) => {
+  const formData = new FormData();
+  formData.append("id", id);
+  formData.append("description", description);
+  formData.append("name", name);
+  formData.append("difficulty", difficulty);
+  formData.append("quizImage", quizImage);
+  return instance.put(`api/v1/quiz`, formData);
+};
+
+const deleteQuizForAdmin = (id) => {
+  return instance.delete(`api/v1/quiz/${id}`);
+};
+
 export {
   getQuizbyUser,
   getLogin,
@@ -41,4 +61,6 @@ export {
   postSubmitQuiz,
   postCreateNewQuiz,
   getAllQuizForAdmin,
+  putUpdateQuizForAdmin,
+  deleteQuizForAdmin,
 };

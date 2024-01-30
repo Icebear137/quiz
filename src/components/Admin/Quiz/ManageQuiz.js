@@ -7,6 +7,8 @@ import { postCreateNewQuiz } from "../../../api/apiServices";
 import { set } from "nprogress";
 import { toast } from "react-toastify";
 import TableQuiz from "./TableQuiz";
+import ModalDeleteQuiz from "./ModalDeleteQuiz";
+import ModalUpdateQuiz from "./ModalUpdateQuiz";
 
 const ManageQuiz = () => {
   const [name, setName] = useState("");
@@ -28,9 +30,8 @@ const ManageQuiz = () => {
       return;
     }
     if (image === null) {
-      setImage(
-        "https://developers.elementor.com/docs/assets/img/elementor-placeholder-image.png"
-      );
+      toast.error("Image is required");
+      return;
     }
     let res = await postCreateNewQuiz(
       description,
