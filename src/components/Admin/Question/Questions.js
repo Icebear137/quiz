@@ -1,36 +1,75 @@
 import Select from "react-select";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import FloatingLabel from "react-bootstrap/FloatingLabel";
 import Form from "react-bootstrap/Form";
 import { GoPlusCircle, GoNoEntry } from "react-icons/go";
 import { CiCircleMinus } from "react-icons/ci";
 import { useMediaQuery } from "react-responsive";
 import { v4 as uuidv4 } from "uuid";
+import Lightbox from "yet-another-react-lightbox";
+import { toast } from "react-toastify";
+import {
+  getAllQuizForAdmin,
+  postCreateNewAnswerForQuestion,
+  postCreateNewQuestionForQuiz,
+} from "../../../api/apiServices";
 
 const Questions = (props) => {
   const screenX = window.screen.availWidth;
-  const options = [
-    { value: "EASY", label: "Easy" },
-    { value: "MEDIUM", label: "Medium" },
-    { value: "HARD", label: "Hard" },
-  ];
+  const [isPreviewImage, setIsPreviewImage] = useState(true);
   const [selectedQuiz, setSelectedQuiz] = useState({});
-  const [description, setDescription] = useState("");
   const [questions, setQuestion] = useState([
     {
       id: uuidv4(),
-      description: "question 1",
+      description: "",
       imageFile: "",
       imageName: "",
       answer: [
         {
           id: uuidv4(),
-          description: "answer 1",
+          description: "",
           isCorrect: false,
         },
       ],
     },
   ]);
+
+  const [dataImagePreview, setDataImagePreview] = useState({
+    url: "",
+  });
+
+  const [listQuiz, setListQuiz] = useState([]);
+
+  useEffect(() => {
+    fetchQuiz();
+  }, []);
+
+  const fetchQuiz = async () => {
+    const response = await getAllQuizForAdmin();
+    if (response.EC === 0) {
+      let getListQuiz = response.DT.map((quiz) => {
+        return {
+          value: quiz.id,
+          label: quiz.name,
+        };
+      });
+      setListQuiz(getListQuiz);
+    }
+    console.log(response);
+  };
+
+  const handlePreviewImage = (questionId) => {
+    const question = questions.find((question) => question.id === questionId);
+    if (question) {
+      setDataImagePreview({
+        url:
+          question.imageFile instanceof Blob
+            ? URL.createObjectURL(question.imageFile)
+            : question.imageFile,
+      });
+      setIsPreviewImage(true);
+    }
+  };
 
   const handleAddRemoveQuestion = (type, id) => {
     if (type === "ADD") {
@@ -170,8 +209,61 @@ const Questions = (props) => {
     }
   };
 
-  const handleSubmitQuestion = () => {
+  const handleSubmitQuestion = async () => {
     console.log(questions);
+    //validate
+    if (!selectedQuiz.value) {
+      toast.error("Please select quiz");
+      return;
+    }
+    //validate answer
+    for (const question of questions) {
+      if (!question.description) {
+        toast.error("Please enter question's description");
+        return;
+      }
+      if (question.answer.length < 2) {
+        toast.error("Please enter at least 2 answer");
+        return;
+      }
+      for (const answer of question.answer) {
+        if (!answer.description) {
+          toast.error("Please enter answer's description");
+          return;
+        }
+      }
+    }
+
+    //each question must have at least 1 correct answer
+    for (const question of questions) {
+      const correctAnswer = question.answer.find(
+        (answer) => answer.isCorrect === true
+      );
+      if (!correctAnswer) {
+        toast.error("Each question must have at least 1 correct answer");
+        return;
+      }
+    }
+
+    alert("me");
+    return;
+
+    //submit question
+    for (const question of questions) {
+      const q = await postCreateNewQuestionForQuiz(
+        +selectedQuiz.value,
+        question.description,
+        question.imageFile
+      );
+      //submit answer
+      for (const answer of question.answer) {
+        await postCreateNewAnswerForQuestion(
+          answer.description,
+          answer.isCorrect,
+          q.DT.id
+        );
+      }
+    }
   };
 
   return (
@@ -190,10 +282,9 @@ const Questions = (props) => {
               height: "60px",
             }),
           }}
-          defaultValue={options[0]}
           value={selectedQuiz}
           onChange={setSelectedQuiz}
-          options={options}
+          options={listQuiz}
         />
       </div>
       <div className="pt-[15px] pb-[15px] text-start">Add Question</div>
@@ -235,7 +326,14 @@ const Questions = (props) => {
                     type="file"
                     hidden
                   />
-                  <span>{question.imageName && question.imageName}</span>
+                  {question.imageName ? (
+                    <span
+                      className="cursor-pointer text-[#919090] hover:text-black"
+                      onClick={() => handlePreviewImage(question.id)}
+                    >
+                      {question.imageName}
+                    </span>
+                  ) : null}
                 </div>
                 <div className="flex flex-row gap-[15px] basis-1/6">
                   <span
@@ -256,7 +354,6 @@ const Questions = (props) => {
                   )}
                 </div>
               </div>
-              {console.log(question.answer)}
               {question.answer &&
                 question.answer.length > 0 &&
                 question.answer.map((answer, index) => {
@@ -336,6 +433,17 @@ const Questions = (props) => {
             Save
           </button>
         </div>
+      )}
+      {isPreviewImage === true && (
+        <Lightbox
+          open={isPreviewImage}
+          close={() => setIsPreviewImage(false)}
+          slides={[
+            {
+              src: dataImagePreview.url,
+            },
+          ]}
+        />
       )}
     </div>
   );
