@@ -73,6 +73,10 @@ const postCreateNewAnswerForQuestion = (
   });
 };
 
+const getAllUser = () => {
+  return instance.get("api/v1/participant/all");
+};
+
 export {
   getQuizbyUser,
   getLogin,
@@ -85,4 +89,5 @@ export {
   deleteQuizForAdmin,
   postCreateNewQuestionForQuiz,
   postCreateNewAnswerForQuestion,
+  getAllUser,
 };

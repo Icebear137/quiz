@@ -9,6 +9,8 @@ import { toast } from "react-toastify";
 import TableQuiz from "./TableQuiz";
 import ModalDeleteQuiz from "./ModalDeleteQuiz";
 import ModalUpdateQuiz from "./ModalUpdateQuiz";
+import UpdateQuestion from "./UpdateQuestion";
+import AssignQuiz from "./AssignQuiz";
 
 const ManageQuiz = () => {
   const [name, setName] = useState("");
@@ -123,13 +125,24 @@ const ManageQuiz = () => {
                 Save
               </div>
             </div>
+            <div className="list-detail">
+              <TableQuiz />
+            </div>
+          </Accordion.Body>
+        </Accordion.Item>
+        <Accordion.Item eventKey="1">
+          <Accordion.Header>Update Quiz</Accordion.Header>
+          <Accordion.Body>
+            <UpdateQuestion />
+          </Accordion.Body>
+        </Accordion.Item>
+        <Accordion.Item eventKey="2">
+          <Accordion.Header>Assign Quiz</Accordion.Header>
+          <Accordion.Body>
+            <AssignQuiz />
           </Accordion.Body>
         </Accordion.Item>
       </Accordion>
-
-      <div className="list-detail">
-        <TableQuiz />
-      </div>
     </div>
   );
 };

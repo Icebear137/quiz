@@ -14,7 +14,7 @@ import {
   postCreateNewQuestionForQuiz,
 } from "../../../api/apiServices";
 
-const Questions = (props) => {
+const UpdateQuestion = (props) => {
   const screenX = window.screen.availWidth;
   const [isPreviewImage, setIsPreviewImage] = useState(true);
   const [selectedQuiz, setSelectedQuiz] = useState({});
@@ -284,7 +284,6 @@ const Questions = (props) => {
 
   return (
     <div className="container max-w-[1000px] lg:min-w-[900px] p-[20px]">
-      <h1>Questions</h1>
       <div className="form-group flex flex-col m-auto w-full mb-[15px]">
         <label htmlFor="" className="pt-[15px] pb-[15px] text-start">
           Select Quiz
@@ -452,7 +451,6 @@ const Questions = (props) => {
       )}
       {isPreviewImage === true && (
         <Lightbox
-          open={isPreviewImage}
           close={() => setIsPreviewImage(false)}
           slides={[
             {
@@ -465,4 +463,4 @@ const Questions = (props) => {
   );
 };
 
-export default Questions;
+export default UpdateQuestion;

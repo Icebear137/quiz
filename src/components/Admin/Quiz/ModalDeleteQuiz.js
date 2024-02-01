@@ -36,9 +36,7 @@ const ModalDeleteQuiz = (props) => {
         <Modal.Header closeButton>
           <Modal.Title>Confirm delete Quiz</Modal.Title>
         </Modal.Header>
-        <Modal.Body>
-          Are you sure to delete this user {props.user.email}
-        </Modal.Body>
+        <Modal.Body>Are you sure to delete this quiz</Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={handleClose}>
             Cancel
