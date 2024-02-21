@@ -77,6 +77,14 @@ const getAllUser = () => {
   return instance.get("api/v1/participant/all");
 };
 
+const postAssignQuiz = (quizId, userId) => {
+  return instance.post("api/v1/quiz-assign-to-user", { quizId, userId });
+};
+
+const getQuizWithQA = (id) => {
+  return instance.get(`api/v1/quiz-with-qa/${id}`);
+};
+
 export {
   getQuizbyUser,
   getLogin,
@@ -90,4 +98,6 @@ export {
   postCreateNewQuestionForQuiz,
   postCreateNewAnswerForQuestion,
   getAllUser,
+  postAssignQuiz,
+  getQuizWithQA,
 };
